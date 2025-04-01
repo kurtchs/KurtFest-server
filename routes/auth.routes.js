@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const verifyToken = require("../middleware/auth.middlewares")
+const {verifyToken, verifyAdmin} = require("../middleware/auth.middlewares")
 
 const User = require("../models/User.model")
 
@@ -85,8 +85,8 @@ router.post("/login", async (req, res, next) => {
         // payload es la información unica del usuario que lo identifica que estara dentro del token.
         const payload = {
             _id: foundUser._id,
-            email: foundUser.email
-            //! aqui va el roll user admin
+            email: foundUser.email,
+            role: foundUser.role
         }
 
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, { algorithm: "HS256", expiresIn: "7d" })
@@ -110,10 +110,10 @@ router.get("/verify", verifyToken, (req, res) => {
 
 })
 
-router.get("/privpage", verifyToken, (req, res) => {
+router.delete("/private-page-example", verifyToken, verifyAdmin, (req, res) => {
 
-
-    res.status(201).json("página privada")
+    console.log(req.payload._id)
+    res.status(201).json("borrado")
 })
 
 

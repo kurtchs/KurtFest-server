@@ -22,4 +22,17 @@ function verifyToken (req, res, next) {
 
 }
 
-module.exports = verifyToken
+function verifyAdmin(req, res, next){
+
+    if(req.payload.role === "admin") {
+        next()
+    } else {
+        res.status(401).json({errorMessage: "ruta privada admin"})
+    }
+
+}
+
+module.exports = {
+    verifyToken,
+    verifyAdmin
+}
