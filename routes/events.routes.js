@@ -4,7 +4,7 @@ const Event = require("../models/Event.model")
 const express = require("express")
 
 //Rutas pruebas
-// app.get("/", (req, res, next) => {
+// router.get("/", (req, res, next) => {
 //     res.json({ messege:"conexión funcionando"})
 //   })
   
@@ -21,6 +21,16 @@ const express = require("express")
 //   })
   
   //Ruta crud evento
+
+  router.get("/", verifyToken, async (req, res, next) => {
+    try {
+      const getEvents = await Event.find()
+      res.status(200).json(getEvents)
+    } catch (error) {
+      next(error)
+    }
+  });
+
   router.post("/",verifyToken, verifyAdmin, async (req, res, next) => {
   
       try {

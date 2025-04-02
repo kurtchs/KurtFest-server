@@ -3,6 +3,15 @@ const {verifyToken, verifyAdmin} = require("../middleware/auth.middlewares")
 const Ticket = require("../models/Ticket.model")
 const express = require("express")
 
+router.get("/", verifyToken, async (req, res, next) => {
+    try {
+      const getTickets = await Event.find()
+      res.status(200).json(getTickets)
+    } catch (error) {
+      next(error)
+    }
+  });
+
 router.post("/",verifyToken , async (req, res, next) => {
   
     try {
