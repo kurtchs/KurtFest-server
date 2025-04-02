@@ -24,7 +24,7 @@ const express = require("express")
 
   router.get("/", verifyToken, async (req, res, next) => {
     try {
-      const getEvents = await Event.find()
+      const getEvents = await Event.find().populate("username", "username")
       res.status(200).json(getEvents)
     } catch (error) {
       next(error)
