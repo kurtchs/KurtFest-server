@@ -9,14 +9,14 @@ const eventSchema = new Schema(
     },
       date: String,
       info: String,
-      hour: Number,
+      hour: String,
       location: String,
       totalAmount: Number,
       genre: {
         type:[String],
         enum:["Rock","Electronica"]
       },
-      adminId: ObjectId
+      admin: String
   })
 
 
