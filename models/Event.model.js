@@ -13,14 +13,17 @@ const eventSchema = new Schema(
       info: String,
       hour: String,
       location: String,
-      totalAmount: Number,
+      totalAmount:{
+        type: Number,
+        required:true
+      },
       genre: {
         type:[String],
         enum:["Rock","Electronica"]
       },
       admin:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
+        ref: "User",
         require: true
       }
   })

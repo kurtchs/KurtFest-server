@@ -5,7 +5,7 @@ const express = require("express")
 
 router.get("/", verifyToken, async (req, res, next) => {
     try {
-      const getTickets = await Ticket.find().populate("event", "name").populate("username", "username").populate("event", "date").populate("event", "hour")
+      const getTickets = await Ticket.find().populate("event", "name date hour").populate("username", "username")
       res.status(200).json(getTickets)
     } catch (error) {
       next(error)

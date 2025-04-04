@@ -7,13 +7,13 @@ const ticketSchema = new Schema(
     username:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true
+        required: true
     },
         date: String,
         event:{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Event",
-            require: true
+            required: true
         },
         hour: String,
         location: String,

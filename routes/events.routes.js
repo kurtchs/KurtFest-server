@@ -24,14 +24,27 @@ const express = require("express")
 
   router.get("/", verifyToken, async (req, res, next) => {
     try {
-      const getEvents = await Event.find().populate("username", "username")
+      const getEvents = await Event.find().populate("admin", "username")
       res.status(200).json(getEvents)
     } catch (error) {
       next(error)
     }
   });
 
-  router.post("/",verifyToken, verifyAdmin, async (req, res, next) => {
+  router.get("/:eventId", verifyToken, async (req, res, next) => {
+    try {
+
+      const getEvent = await Event.findById(req.params.eventId).populate("admin", "username")
+      if(!getEvent){
+        return res.status(404).json({errorMessage: "No se encontro evento"})
+      }
+      res.status(200).json(getEvent)
+    } catch (error) {
+      next(error)
+    }
+  });
+
+  router.post("/addevent/",verifyToken, verifyAdmin, async (req, res, next) => {
   
       try {
   
@@ -43,9 +56,10 @@ const express = require("express")
             location: req.body.location,
             totalAmount: req.body.totalAmount,
             genre: req.body.genre,
-            admin: req.body.admin
+            admin: req.payload._id
           })
           res.status(200).json(savedEvent) 
+          console.log(savedEvent)
           
       } catch (error) {
           next(error)
@@ -53,7 +67,7 @@ const express = require("express")
   
   })
 
-  router.put("/:id",verifyToken, verifyAdmin,  async (req, res, next) => {
+  router.put("/editevent/:eventId",verifyToken, verifyAdmin,  async (req, res, next) => {
   
     try {
         const {id} = req.params
@@ -67,7 +81,7 @@ const express = require("express")
           location: req.body.location,
           totalAmount: req.body.totalAmount,
           genre: req.body.genre,
-          admin: req.body.admin
+          admin: req.payload._id
         }, {new: true}
     )
         res.status(200).json(updateEvent) 
