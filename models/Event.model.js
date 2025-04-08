@@ -6,7 +6,7 @@ const eventSchema = new Schema(
   {
     name: {
       type: String,
-      require: true,
+      required: true,
       unique: true
     },
       date: String,
@@ -24,8 +24,13 @@ const eventSchema = new Schema(
       admin:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true
-      }
+        required: true
+      },
+      imageUrl: {
+        type: String,
+        required: false
+      },
+      
   })
 
 
