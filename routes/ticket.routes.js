@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const {verifyToken, verifyAdmin} = require("../middleware/auth.middlewares")
+const {verifyToken} = require("../middleware/auth.middlewares")
 const Ticket = require("../models/Ticket.model")
-const express = require("express")
 
-router.get("/", verifyToken, async (req, res, next) => {
+
+router.get("/user/:userId", verifyToken, async (req, res, next) => {
     try {
-      const getTickets = await Ticket.find().populate("event", "name date hour").populate("username", "username")
+      const getTickets = await Ticket.find({ username: req.params.userId }).populate("event", "name date hour").populate("username", "username")
       res.status(200).json(getTickets)
     } catch (error) {
       next(error)
@@ -16,10 +16,13 @@ router.post("/",verifyToken , async (req, res, next) => {
   
     try {
 
+        console.log(req);
+        console.log(res);
+
        const savedTicket = await Ticket.create({
-          username: req.body.username,
+          username: req.payload._id,
           date: req.body.date,
-          event: req.body.event,
+          event: req.body._id,
           hour: req.body.hour,
           location: req.body.location,
           totalAmount: req.body.totalAmount,
@@ -57,9 +60,13 @@ router.put("/:id",verifyToken, async (req, res, next) => {
 router.delete("/:id",verifyToken, async (req, res, next) => {
   
     try {
-
+        console.log("ID recibido:", req.params.id)
         const response = await Ticket.findByIdAndDelete(req.params.id)
-        res.json(response)
+        if (response){
+            res.status(200).json({message: "Ticket deleted"})
+        } else {
+            res.status(404).json({message: "Ticket not found"})
+        }
         
     } catch (error) {
         next(error)

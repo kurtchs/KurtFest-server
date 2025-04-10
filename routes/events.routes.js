@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const {verifyToken, verifyAdmin} = require("../middleware/auth.middlewares")
 const Event = require("../models/Event.model")
+const Ticket = require("../models/Ticket.model")
 const express = require("express")
 const cloudinary = require("../config/cloudinary")
 const multer = require("multer")
@@ -24,6 +25,26 @@ const upload = multer({ storage: storage})
       next(error)
     }
   });
+
+  router.get("/getTickets/:userId", verifyToken, async (req, res, next) => {
+    try {
+
+     const getTickets = await Ticket.find({ username: req.params.userId });
+     
+     const eventIds = getTickets.map(
+      Ticket => Ticket.event);
+
+    console.log("Event IDs:", eventIds);
+      // $in es un operador que le dice a la base de datos: "encuentra los eventos cuyo ID esté dentro de la lista eventIds"
+      const getEvents = await Event.find({ _id: { $in: eventIds } })
+
+      res.status(200).json(getEvents);
+
+    } catch (error) {
+      next(error)
+    }
+  });
+
 
   router.get("/:eventId", verifyToken, async (req, res, next) => {
     try {

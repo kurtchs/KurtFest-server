@@ -25,7 +25,13 @@ const userSchema = new Schema(
       type: String,
       enum:["user", "admin"],
       default: "user"
-    }
+    },
+    ticketsPurchased: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ticket"
+      }
+    ]
   },
   {
     // configuracion adicional de mongo que crea 2 propiedades createdAt crea el momento en el que se creo ese documento y updatedAt acualizar e ir cambiando
